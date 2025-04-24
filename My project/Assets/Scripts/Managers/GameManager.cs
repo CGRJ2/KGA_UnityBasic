@@ -1,13 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private static GameManager instance;
+    public static GameManager Instance { get { return instance; } }
+
+    [SerializeField] private GameState gameState;
+    public GameState GmState { get { return gameState; } }
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     void Start()
     {
-        
+        gameState = GameState.OnGame;
     }
 
     // Update is called once per frame
@@ -15,4 +34,9 @@ public class GameManager : MonoBehaviour
     {
         
     }
+}
+
+public enum GameState
+{
+    Pause, OnGame
 }

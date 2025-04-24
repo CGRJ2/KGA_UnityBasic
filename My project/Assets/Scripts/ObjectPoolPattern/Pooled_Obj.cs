@@ -4,15 +4,21 @@ using UnityEngine;
 
 public class Pooled_Obj : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    protected ObjectPool parentPool;
+    public ObjectPool ParentPool { get { return parentPool; } set { parentPool = value; } }
 
-    // Update is called once per frame
-    void Update()
+    private bool generated = false;
+
+    
+
+    private void OnDisable()
     {
-        
+        if (!generated)
+        {
+            generated = true;
+            return;
+        }
+
+        parentPool.ReturnPooledObj(gameObject);
     }
 }

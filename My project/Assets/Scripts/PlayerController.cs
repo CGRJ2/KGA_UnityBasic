@@ -24,6 +24,9 @@ public class PlayerController : MonoBehaviour
     {
         float x = joy.Horizontal;
         float y = joy.Vertical;
+        if (x >= 0) GetComponent<SpriteRenderer>().flipX = true;
+        else GetComponent<SpriteRenderer>().flipX = false;
+            
         dir = new Vector2(x, y);
     }
 }
