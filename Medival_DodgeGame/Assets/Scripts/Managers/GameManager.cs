@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get { return instance; } }
 
     public GameObject player;
+    private float startTime;
+    public float scoreTime;
 
     [SerializeField] private GameState gameState;
     public GameState GmState { get { return gameState; } }
@@ -28,13 +30,22 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        GameStart();
+    }
+
+    void GameStart()
+    {
         gameState = GameState.OnGame;
+        startTime = Time.time;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (gameState == GameState.OnGame)
+        {
+            scoreTime = Time.time - startTime;
+        }
     }
 }
 

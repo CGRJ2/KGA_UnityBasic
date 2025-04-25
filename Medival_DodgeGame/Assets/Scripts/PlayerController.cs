@@ -24,11 +24,23 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        float x = joy.Horizontal;
-        float z = joy.Vertical;
+        float x = 0;
+        float z = 0;
+
+        if (joy.Horizontal != 0) // 조이스틱이 우선순위
+            x = joy.Horizontal;
+        else if (Input.GetAxis("Horizontal") != 0)
+            x = Input.GetAxis("Horizontal");
+
+        if (joy.Vertical != 0) 
+            z = joy.Vertical;
+        else if (Input.GetAxis("Vertical") != 0)
+            z = Input.GetAxis("Vertical");
+        
+        dir = new Vector3(x, 0, z);
+        if (dir == Vector3.zero) return;
+
         if (x >= 0) GetComponent<SpriteRenderer>().flipX = true;
         else GetComponent<SpriteRenderer>().flipX = false;
-            
-        dir = new Vector3(x, 0, z);
     }
 }
