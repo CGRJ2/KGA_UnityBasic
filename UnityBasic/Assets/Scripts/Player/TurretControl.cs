@@ -20,19 +20,19 @@ public class TurretControl : MonoBehaviour
     void Update()
     {
         // 탱크 머리 돌아가기
-        /*if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.A))
             rotateState_H = -1;
         else if (Input.GetKey(KeyCode.D))
             rotateState_H = 1;
         else
-            rotateState_H = 0;*/
-        
-        if (joy.Horizontal < 0)
+            rotateState_H = 0;
+
+        /*if (joy.Horizontal < 0)
             rotateState_H = -1;
         else if (joy.Horizontal > 0)
             rotateState_H = 1;
         else
-            rotateState_H = 0;
+            rotateState_H = 0;*/
 
         // 대포 발사
         if (Input.GetKey(KeyCode.W))

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CircularLayout : MonoBehaviour
+public class Circular_SpawnPoint : MonoBehaviour
 {
     [SerializeField] private float radius = 5f;
     [SerializeField] private bool autoUpdate = false;

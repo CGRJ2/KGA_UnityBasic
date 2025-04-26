@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
+using Sirenix.OdinInspector;
+
+
 
 public class ArrowShooter : MonoBehaviour
 {
@@ -13,19 +16,43 @@ public class ArrowShooter : MonoBehaviour
     private ObjectPool arrowPool;
     [SerializeField] private GameObject arrowPrefab;
     [SerializeField] private int count;
-    [SerializeField] private GameObject spawnPoints_Fixed;
-    [SerializeField] private GameObject spawnPoints_Random;
-    [SerializeField] private List<Transform> spawnPoint_multieShot;
 
+    [FoldoutGroup("발사 패턴 설정")]
+    [InfoBox("기본 설정", InfoMessageType.None)]
+    [SerializeField] private float shotSpeed;
+    [FoldoutGroup("발사 패턴 설정")]
+    [Tooltip("스폰 포인트가 놓일 원의 반지름")]
+    [SerializeField] private float radius;
+
+
+    [FoldoutGroup("발사 패턴 설정/A 패턴")]
+    [InfoBox("랜덤 각도에서 한 발 씩 타겟팅 발사", InfoMessageType.None)]
+    [SerializeField] private GameObject spawnPoint_A;
+    [FoldoutGroup("발사 패턴 설정/A 패턴")]
     [SerializeField] float coolTime_A;    // Single_Shot
-    [SerializeField] float coolTime_B;    // Multie_Shot_Straight
-    [SerializeField] float coolTime_C;    // Multie_Shot_Circle
-    [SerializeField] float coolTime_D;    // Wave_Multie_Circle_Wave
+
+    [FoldoutGroup("발사 패턴 설정/B 패턴")]
+    [InfoBox("12각도에서 동시에 타겟팅 발사", InfoMessageType.None)]
+    [SerializeField] private GameObject spawnPoint_B;
+    [FoldoutGroup("발사 패턴 설정/B 패턴")]
+    [SerializeField] float coolTime_B;    // Multie_Shot_Circle
+
+    [FoldoutGroup("발사 패턴 설정/C 패턴")]
+    [InfoBox("12각도에서 시간차로 타겟팅 발사", InfoMessageType.None)]
+    [SerializeField] private GameObject spawnPoint_C;
+    [FoldoutGroup("발사 패턴 설정/C 패턴")]
+    [SerializeField] float coolTime_C;    // Wave_Multie_Circle_Wave
+
+    [FoldoutGroup("발사 패턴 설정/D 패턴")]
+    [InfoBox("랜덤 각도에서 일렬로 직선 발사", InfoMessageType.None)]
+    [SerializeField] private GameObject spawnPoint_D;
+    [FoldoutGroup("발사 패턴 설정/D 패턴")]
+    [SerializeField] float coolTime_D;    // Multie_Shot_Straight
+
     bool isOnPattern_A = false;
     bool isOnPattern_B = false;
     bool isOnPattern_C = false;
     bool isOnPattern_D = false;
-
 
     private void Awake()
     {
@@ -79,8 +106,8 @@ public class ArrowShooter : MonoBehaviour
         while (gm.GmState == GameState.OnGame)
         {
             float randomAngle = UnityEngine.Random.Range(0f, 360f);
-            spawnPoints_Random.GetComponent<SpawnPoint>().PosAndRotSet(randomAngle, gm.player.transform);
-            Shot(spawnPoints_Random.transform);
+            spawnPoint_A.GetComponent<SpawnPoint>().PosAndRotSet(randomAngle, gm.player.transform);
+            Shot(spawnPoint_A.transform);
             yield return new WaitForSeconds(coolTime_A);
         }
         isOnPattern_A = false;
@@ -104,7 +131,7 @@ public class ArrowShooter : MonoBehaviour
     {
         while (gm.GmState == GameState.OnGame)
         {
-            Transform parent = spawnPoints_Fixed.transform;
+            Transform parent = spawnPoint_B.transform;
             for (int i = 0; i < parent.childCount; i++)
             {
                 Shot(parent.GetChild(i), gm.player.transform);
@@ -119,7 +146,7 @@ public class ArrowShooter : MonoBehaviour
     {
         while(gm.GmState == GameState.OnGame)
         {
-            Transform parent = spawnPoints_Fixed.transform;
+            Transform parent = spawnPoint_B.transform;
             for (int i = 0; i < parent.childCount; i++)
             {
                 Shot(parent.GetChild(i), gm.player.transform);
@@ -143,6 +170,7 @@ public class ArrowShooter : MonoBehaviour
     {
         GameObject arrow = arrowPool.DisposePooledObj();
         arrow.transform.position = spawnPoint.position;
+        arrow.GetComponent<Arrow>().Speed = shotSpeed;
 
         // 직선으로 발사
         if (target == null) 

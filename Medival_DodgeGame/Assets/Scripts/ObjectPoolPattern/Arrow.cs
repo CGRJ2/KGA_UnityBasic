@@ -5,8 +5,8 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Arrow : Pooled_Obj
 {
-    [SerializeField] float speed;
-
+    float speed;
+    public float Speed { get { return speed; } set { speed = value; } }
 
     private void OnEnable()
     {
@@ -16,11 +16,7 @@ public class Arrow : Pooled_Obj
 
         }
     }
-
-    void Start()
-    {
-        
-    }
+    
 
     // Update is called once per frame
     void Update()

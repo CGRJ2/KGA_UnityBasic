@@ -22,10 +22,10 @@ public class MoveControl : MonoBehaviour
     }
     void Update()
     {
-        //x = Input.GetAxis("Horizontal");
-        //z = Input.GetAxis("Vertical");
-        x = joy.Horizontal;
-        z = joy.Vertical;
+        x = Input.GetAxis("Horizontal");
+        z = Input.GetAxis("Vertical");
+        //x = joy.Horizontal;
+        //z = joy.Vertical;
     }
 
     // 물리 처리는 FixedUpdate에서

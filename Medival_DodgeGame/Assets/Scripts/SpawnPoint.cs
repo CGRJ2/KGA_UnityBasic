@@ -5,12 +5,16 @@ using UnityEngine;
 
 public class SpawnPoint : MonoBehaviour
 {
-    [SerializeField] float radius;
-    public void PosAndRotSet(float angle, Transform target)
+    [SerializeField] protected float radius;
+
+    public void PosAndRotSet(float angle, Transform target, float radius = -1)
     {
-        Vector3 localPos = new Vector3(Mathf.Cos(angle) * radius, 0f, Mathf.Sin(angle) * radius);
+        float r = 0;
+        if (radius == -1) r = this.radius;
+        else r = radius;
+
+        Vector3 localPos = new Vector3(Mathf.Cos(angle) * r, 0f, Mathf.Sin(angle) * r);
         transform.localPosition = localPos;
         transform.LookAt(target);
-
     }
 }
