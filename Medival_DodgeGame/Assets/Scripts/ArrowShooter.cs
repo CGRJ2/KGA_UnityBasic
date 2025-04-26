@@ -29,11 +29,15 @@ public class ArrowShooter : MonoBehaviour
     [InfoBox("랜덤 각도에서 한 발 씩 타겟팅 발사", InfoMessageType.None)]
     [SerializeField] private GameObject spawnPoint_A;
     [FoldoutGroup("발사 패턴 설정/A 패턴")]
+    [SerializeField] float startTime_A;
+    [FoldoutGroup("발사 패턴 설정/A 패턴")]
     [SerializeField] float coolTime_A;    // Single_Shot
 
     [FoldoutGroup("발사 패턴 설정/B 패턴")]
     [InfoBox("12각도에서 동시에 타겟팅 발사", InfoMessageType.None)]
     [SerializeField] private GameObject spawnPoint_B;
+    [FoldoutGroup("발사 패턴 설정/B 패턴")]
+    [SerializeField] float startTime_B;
     [FoldoutGroup("발사 패턴 설정/B 패턴")]
     [SerializeField] float coolTime_B;    // Multie_Shot_Circle
 
@@ -41,11 +45,15 @@ public class ArrowShooter : MonoBehaviour
     [InfoBox("12각도에서 시간차로 타겟팅 발사", InfoMessageType.None)]
     [SerializeField] private GameObject spawnPoint_C;
     [FoldoutGroup("발사 패턴 설정/C 패턴")]
+    [SerializeField] float startTime_C;
+    [FoldoutGroup("발사 패턴 설정/C 패턴")]
     [SerializeField] float coolTime_C;    // Wave_Multie_Circle_Wave
 
     [FoldoutGroup("발사 패턴 설정/D 패턴")]
     [InfoBox("랜덤 각도에서 일렬로 직선 발사", InfoMessageType.None)]
     [SerializeField] private GameObject spawnPoint_D;
+    [FoldoutGroup("발사 패턴 설정/D 패턴")]
+    [SerializeField] float startTime_D;
     [FoldoutGroup("발사 패턴 설정/D 패턴")]
     [SerializeField] float coolTime_D;    // Multie_Shot_Straight
 
@@ -69,25 +77,26 @@ public class ArrowShooter : MonoBehaviour
 
         if (gm.GmState == GameState.OnGame)
         {
-            if (gm.scoreTime >= 1f && !isOnPattern_A)
+            // 30초 지나면 A패턴 하나 추가할까?
+            if (gm.scoreTime >= startTime_A && !isOnPattern_A)
             {
                 StartCoroutine(A_Pattern());
                 isOnPattern_A = true;
             }
 
-            /*if (gm.scoreTime >= 15f && !isOnPattern_B)
+            if (gm.scoreTime >= startTime_B && !isOnPattern_B)
             {
                 StartCoroutine(B_Pattern());
                 isOnPattern_B = true;
-            }*/
+            }
 
-            if (gm.scoreTime >= 6.5f && !isOnPattern_C)
+            if (gm.scoreTime >= startTime_C && !isOnPattern_C)
             {
                 StartCoroutine(C_Pattern());
                 isOnPattern_C = true;
             }
 
-            if (gm.scoreTime >= 10f && !isOnPattern_D)
+            if (gm.scoreTime >= startTime_D && !isOnPattern_D)
             {
                 StartCoroutine(D_Pattern());
                 isOnPattern_D = true;
@@ -114,44 +123,49 @@ public class ArrowShooter : MonoBehaviour
         yield break;
     }
 
-    IEnumerator B_Pattern() // Multie_Shot_Straight
+    IEnumerator B_Pattern() // Multie_Shot_Circle
     {
         while (gm.GmState == GameState.OnGame)
         {
-            //Shot();
-
-
+            Transform parent = spawnPoint_B.transform;
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                Shot(parent.GetChild(i), gm.player.transform);
+            }
             yield return new WaitForSeconds(coolTime_B);
         }
         isOnPattern_B = false;
         yield break;
     }
 
-    IEnumerator C_Pattern() // Multie_Shot_Circle
+    IEnumerator C_Pattern() // Wave_Multie_Circle_Wave
     {
-        while (gm.GmState == GameState.OnGame)
+        while(gm.GmState == GameState.OnGame)
         {
-            Transform parent = spawnPoint_B.transform;
+            Transform parent = spawnPoint_C.transform;
             for (int i = 0; i < parent.childCount; i++)
             {
                 Shot(parent.GetChild(i), gm.player.transform);
+                yield return new WaitForSeconds(0.5f);
             }
             yield return new WaitForSeconds(coolTime_C);
         }
         isOnPattern_C = false;
         yield break;
     }
-
-    IEnumerator D_Pattern() // Wave_Multie_Circle_Wave
+    IEnumerator D_Pattern() // Multie_Shot_Straight
     {
-        while(gm.GmState == GameState.OnGame)
+        while (gm.GmState == GameState.OnGame)
         {
-            Transform parent = spawnPoint_B.transform;
+            float randomAngle = UnityEngine.Random.Range(0f, 360f);
+            spawnPoint_D.GetComponent<SpawnPoint>().PosAndRotSet(randomAngle, gm.player.transform);
+
+            Transform parent = spawnPoint_D.transform;
             for (int i = 0; i < parent.childCount; i++)
             {
-                Shot(parent.GetChild(i), gm.player.transform);
-                yield return new WaitForSeconds(0.5f);
+                Shot(parent.GetChild(i));
             }
+
             yield return new WaitForSeconds(coolTime_D);
         }
         isOnPattern_D = false;
@@ -163,12 +177,13 @@ public class ArrowShooter : MonoBehaviour
 
 
 
-    
-    
+
+
     // 발사
     private void Shot(Transform spawnPoint, Transform target = null)
     {
         GameObject arrow = arrowPool.DisposePooledObj();
+        if (arrow == null) return;
         arrow.transform.position = spawnPoint.position;
         arrow.GetComponent<Arrow>().Speed = shotSpeed;
 
