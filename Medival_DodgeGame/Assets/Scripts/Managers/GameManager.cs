@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameState gameState;
 
     [HideInInspector] public UnityEvent GameStartEvent = new UnityEvent();
-    [HideInInspector] public UnityEvent GameOverEvent = new UnityEvent();
+    [HideInInspector] public UnityEvent<bool> GameOverEvent = new UnityEvent<bool>();
     [HideInInspector] public UnityEvent PauseEvent = new UnityEvent();
 
 
@@ -86,15 +86,17 @@ public class GameManager : MonoBehaviour
     {
         gameState = GameState.GameOver;
         Pause();
-        GameOverEvent?.Invoke();
         // 게임오버 효과, 사운드, 패널 불러오기 넣기
 
         if (bestRecord < scoreTime)
         {
             // 신기록 갱신!
             bestRecord = scoreTime;
-
-            // 신기록 이펙트 넣기 => New Record!!!
+            GameOverEvent?.Invoke(true);
+        }
+        else
+        {
+            GameOverEvent?.Invoke(false);
         }
     }
 
@@ -111,6 +113,16 @@ public class GameManager : MonoBehaviour
             PauseEvent?.Invoke();
             gameState = GameState.Pause;
         }
+    }
+
+    public string ScoreToString()
+    {
+        float time = scoreTime;
+        int seconds = Mathf.FloorToInt(time);           // 초
+        int milliseconds = Mathf.FloorToInt((time * 100) % 100);  // 밀리초 (1/100초 단위)
+        string score = string.Format("{0:00}:{1:00}", seconds, milliseconds);
+
+        return score;
     }
 
 }
