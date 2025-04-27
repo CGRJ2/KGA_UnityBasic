@@ -26,4 +26,5 @@ public class ScoreUI : MonoBehaviour
             tmp.text = score;
         }
     }
+
 }

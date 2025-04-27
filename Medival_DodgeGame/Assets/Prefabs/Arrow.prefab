@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8649323110362242894}
   - component: {fileID: 7983894296357185918}
   - component: {fileID: 5523578183208306530}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ArrowColider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 7280863927635967958}
   - component: {fileID: 3467903991434952840}
   - component: {fileID: 1393956803988498521}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -259,7 +259,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6796264207725541018}
   - component: {fileID: 630950375000522512}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ArrowSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
