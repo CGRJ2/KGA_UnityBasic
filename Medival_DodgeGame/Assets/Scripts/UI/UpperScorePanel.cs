@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ScoreUI : MonoBehaviour
+public class UpperScorePanel : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI tmp;
     GameManager gm;
